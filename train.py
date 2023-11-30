@@ -11,6 +11,8 @@ from rascaline.utils import PowerSpectrum
 from radial_basis import KspaceRadialBasis
 from sklearn.linear_model import RidgeCV
 from sklearn.metrics import mean_squared_error
+from equisolve.utils.convert import ase_to_tensormap
+
 
 def get_train_test(mask):
     train_frames_dataset = []
