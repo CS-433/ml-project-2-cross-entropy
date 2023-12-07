@@ -61,5 +61,6 @@ class MLP(nn.Module):
         ))
 
     def forward(self, x):
-
+        for fc in self.fc_list:
+            x = fc(x)
         return x
