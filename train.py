@@ -153,7 +153,7 @@ def main(args):
     # clf.fit(X_train[0].values, y_diff_train)
     print(clf.alpha_)
 
-    y_diff_pred = clf.predict(X[0].values).flatten()
+    y_diff_pred = clf.predict(dataloader.X)
     y_pred = np.copy(y_diff_pred)
     y_pred[:50] *= 2
     y_pred[50:] *= 3
