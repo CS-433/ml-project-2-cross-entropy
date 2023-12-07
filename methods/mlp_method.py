@@ -9,7 +9,7 @@ from methods.base_method import BaseMethod
 
 class MlpMethod(BaseMethod):
     def __init__(self, dataloader, batch_size=64, epochs=100):
-        super(MlpMethod).__init__(dataloader)
+        super().__init__(dataloader)
 
         X = torch.from_numpy(self.dataloader.X.astype(np.float32))
         y = torch.from_numpy(self.dataloader.y.astype(np.float32))
