@@ -7,14 +7,13 @@ from methods.base_method import BaseMethod
 
 
 class MlpMethod(BaseMethod):
-    def __init__(self, dataloader, batchsize=64, epochs=100):
+    def __init__(self, dataloader, batch_size=64, epochs=100):
         super(MlpMethod).__init__(dataloader)
 
         X = torch.from_numpy(self.dataloader.X.astype(np.float32))
         y = torch.from_numpy(self.dataloader.y.astype(np.float32))
 
         dataset = TensorDataset(X, y)
-        batch_size = 64
         self.dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
         self.epochs = epochs
         self.mlp = MLP(181, [512, 128, 32], 1, 0.3)
