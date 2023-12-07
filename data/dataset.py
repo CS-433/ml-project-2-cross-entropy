@@ -1,25 +1,70 @@
+from dataclasses import dataclass
 from typing import Union
 import ase.io
 import numpy as np
 from equisolve.utils import ase_to_tensormap
 from data.feature import Featurizer
 
-
+@dataclass
 class Dataset:
-    def __init__(self, path, num, featurizer: Featurizer):
-        super(Dataset).__init__()
-        self.raw_data = ase.io.read(path, ":")
+    """A dataset class holding raw data and featurized data.
+    Attributes:
+        raw_data (list): The raw data
+        X (np.ndarray): The featurized data
+        y (np.ndarray): The energy data
+    """
+    raw_data: list
+    X: np.ndarray
+    y: np.ndarray
 
-        X = featurizer.featurize(self.raw_data)
-        y = ase_to_tensormap(self.raw_data, energy="energy")
-        self.X = X[0].values / num
-        self.y = y[0].values / num
+    def __post_init__(self):
+        # sanity check
+        assert isinstance(self.raw_data, list)
+        assert len(self.raw_data) == len(self.X)
+        assert len(self.raw_data) == len(self.y)
+
+    def __len__(self):
+        return len(self.raw_data)
 
     def __getitem__(self, index):
         return self.X[index], self.y[index]
 
     def __iter__(self, to_tensor=False):
         return None
+
+    @classmethod
+    def from_file(cls, path, num, featurizer: Featurizer):
+        """Load data from a file.
+        Args:
+            path (str): The path to the file.
+            num (int): The number of atoms in each frame of the dataset.
+            featurizer (Featurizer): The featurizer.
+        """
+        raw_data = ase.io.read(path, ":")
+        X = featurizer.featurize(raw_data)[0].values / num
+        y = ase_to_tensormap(raw_data, energy="energy")[0].values / num
+
+        return cls(raw_data, X, y)
+
+    def split(self, indexs: list):
+        """Split the dataset.
+        Args:
+            indexs (list): The indexs to split the dataset.
+
+        Returns:
+            list: A list of datasets.
+        
+        Example:
+            >>> train, val = dataset.split(
+                    [list(range(10)),
+                     list(range(10, 50))
+                    ])
+        """
+        return [Dataset([self.raw_data[i] for i in index],
+                        self.X[index],
+                        self.y[index])
+                        for index in indexs]
+
 
     def get_energy(self,
                    zero_point: Union[float, None] = None,
