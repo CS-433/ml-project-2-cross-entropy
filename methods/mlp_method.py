@@ -19,7 +19,6 @@ class MlpMethod(BaseMethod):
         self.epochs = epochs
         self.mlp = MLP(181, [512, 128, 32], 1, 0.3)
 
-
     def train(self):
         for epoch in range(self.epochs):
             for X_batch, y_batch in self.dataloader:
@@ -41,11 +40,16 @@ class MLP(nn.Module):
                     nn.Linear(input, h),
                     nn.Dropout(p=dropout)
                 ))
-            elif i == len(hidden) - 1:
+            else:
                 fc_list.append(nn.Sequential(
-                    nn.Linear(h, output),
+                    nn.Linear(hidden[i-1], h),
                     nn.Dropout(p=dropout)
                 ))
+
+        fc_list.append(nn.Sequential(
+            nn.Linear(h, output),
+            nn.Dropout(p=dropout)
+        ))
 
     def forward(self, x):
 
