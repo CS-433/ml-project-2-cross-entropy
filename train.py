@@ -14,6 +14,7 @@ from rascaline.utils import PowerSpectrum
 from config import config_parser
 from data.dataloader import DataLoader
 from data.dataset import Dataset
+from data.feature import Featurizer
 from radial_basis import KspaceRadialBasis
 from sklearn.linear_model import RidgeCV
 from sklearn.metrics import mean_squared_error
@@ -122,9 +123,10 @@ def main(args):
     # energies_random_trimers -= trimer_zero_point
     # energies_random_trimers_dimers -= diff_zero_point
     # print("")
-    x2_50_data = Dataset("./xe2_50.xyz", 2)
-    x3_50_data = Dataset("./xe3_50.xyz", 3)
-    x3_data = Dataset("./xe3_dataset_dft.xyz", 3)
+    featurizer = Featurizer()
+    x2_50_data = Dataset("./xe2_50.xyz", 2, featurizer)
+    x3_50_data = Dataset("./xe3_50.xyz", 3, featurizer)
+    x3_data = Dataset("./xe3_dataset_dft.xyz", 3, featurizer)
     dataloader = DataLoader([x2_50_data, x3_50_data, x3_data])
 
     # idx_train = np.array(train_frames_dataset)[np.newaxis, :].T
