@@ -1,0 +1,4 @@
+project = ridge
+seed = 0
+method = ridge
+data_path = ./xe3_dataset_dft.xyz
