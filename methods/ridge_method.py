@@ -13,5 +13,5 @@ class RidgeMethod(BaseMethod):
     def train(self):
         self.clf.fit(self.dataloader.X, self.dataloader.y)
 
-    def predict(self):
+    def predict(self, x):
         pass

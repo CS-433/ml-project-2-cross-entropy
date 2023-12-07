@@ -10,7 +10,7 @@ class BaseMethod:
         pass
 
     @abc.abstractmethod
-    def predict(self):
+    def predict(self, x):
         pass
 
     def pre_process(self, dataloader):
