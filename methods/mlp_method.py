@@ -41,21 +41,21 @@ class MLP(nn.Module):
     def __init__(self, input, hidden, output, dropout=0., *args, **kwargs):
         super(MLP).__init__(*args, **kwargs)
 
-        fc_list = []
+        self.fc_list = []
 
         for i, h in enumerate(hidden):
             if i == 0:
-                fc_list.append(nn.Sequential(
+                self.fc_list.append(nn.Sequential(
                     nn.Linear(input, h),
                     nn.Dropout(p=dropout)
                 ))
             else:
-                fc_list.append(nn.Sequential(
+                self.fc_list.append(nn.Sequential(
                     nn.Linear(hidden[i - 1], h),
                     nn.Dropout(p=dropout)
                 ))
 
-        fc_list.append(nn.Sequential(
+        self.fc_list.append(nn.Sequential(
             nn.Linear(h, output),
             nn.Dropout(p=dropout)
         ))
