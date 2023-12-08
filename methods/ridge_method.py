@@ -5,8 +5,8 @@ from methods.base_method import BaseMethod
 
 
 class RidgeMethod(BaseMethod):
-    def __init__(self):
-        super(RidgeMethod).__init__()
+    def __init__(self, dataloader):
+        super().__init__(dataloader)
         self.clf = RidgeCV(alphas=np.geomspace(1e-12, 1e2, 32), fit_intercept=True)
 
 
