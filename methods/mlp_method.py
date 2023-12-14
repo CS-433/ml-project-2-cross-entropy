@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 from torch.nn import MSELoss
 from torch.utils.data import TensorDataset, DataLoader
+from tqdm import tqdm
 
 from methods.base_method import BaseMethod
 
@@ -17,19 +18,23 @@ class MlpMethod(BaseMethod):
         dataset = TensorDataset(X, y)
         self.dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
         self.epochs = epochs
-        self.mlp = MLP(186, [512, 128, 32], 1, 0.3)
-        self.optimizer = torch.optim.Adam(self.mlp.parameters())
+        self.mlp = MLP(186, [128, 64], 1, 0.1)
+        self.optimizer = torch.optim.Adam(self.mlp.parameters(), lr=0.005)
+        self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, epochs)
         self.loss_fn = MSELoss()
 
     def train(self):
         self.mlp.train()
-        for epoch in range(self.epochs):
+        for epoch in tqdm(range(self.epochs)):
             for X_batch, y_batch in self.dataloader:
                 self.optimizer.zero_grad()
                 output = self.mlp(X_batch)
                 loss = self.loss_fn(output, y_batch)
                 loss.backward()
                 self.optimizer.step()
+                self.scheduler.step()
+
+                print(f"{epoch}: {loss:.4f}")
 
     @torch.no_grad()
     def predict(self, x):

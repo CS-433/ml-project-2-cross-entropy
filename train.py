@@ -22,6 +22,7 @@ from sklearn.metrics import mean_squared_error
 from equisolve.utils.convert import ase_to_tensormap
 
 from utils.energy_util import calc_dimer_trimer_energies
+from visualize import visualize_energy
 
 
 def get_train_test(mask):
@@ -142,12 +143,14 @@ def main(args):
     train = DataLoader([dimer_train, trimer_train, rand_trimer_train])
     val = DataLoader([dimer_val, trimer_val, rand_trimer_val])
 
-    method = MlpMethod(train)
+    method = MlpMethod(train, epochs=300)
 
     method.train()
 
     dimer_energy = method.predict(dimer_dataset.X) * 2
     trimer_energy = method.predict(trimer_dataset.X) * 3
+
+    visualize_energy(dimer_dataset, dimer_energy - dimer_energy[-1], trimer_dataset, trimer_energy - trimer_energy[-1])
 
     # idx_train = np.array(train_frames_dataset)[np.newaxis, :].T
     # idx_test = np.array(test_frames_dataset)[np.newaxis, :].T
