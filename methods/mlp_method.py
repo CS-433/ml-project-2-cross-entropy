@@ -17,7 +17,7 @@ class MlpMethod(BaseMethod):
         dataset = TensorDataset(X, y)
         self.dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
         self.epochs = epochs
-        self.mlp = MLP(181, [512, 128, 32], 1, 0.3)
+        self.mlp = MLP(186, [512, 128, 32], 1, 0.3)
         self.optimizer = torch.optim.Adam(self.mlp.parameters())
         self.loss_fn = MSELoss()
 
@@ -34,33 +34,35 @@ class MlpMethod(BaseMethod):
     @torch.no_grad()
     def predict(self, x):
         self.mlp.eval()
+        x = torch.from_numpy(x.astype(np.float32))
         return self.mlp(x)
 
 
 class MLP(nn.Module):
     def __init__(self, input, hidden, output, dropout=0., *args, **kwargs):
-        super(MLP).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
-        self.fc_list = []
+        fc_list = []
 
         for i, h in enumerate(hidden):
             if i == 0:
-                self.fc_list.append(nn.Sequential(
+                fc_list.append(nn.Sequential(
                     nn.Linear(input, h),
                     nn.Dropout(p=dropout)
                 ))
             else:
-                self.fc_list.append(nn.Sequential(
+                fc_list.append(nn.Sequential(
                     nn.Linear(hidden[i - 1], h),
                     nn.Dropout(p=dropout)
                 ))
 
-        self.fc_list.append(nn.Sequential(
+        fc_list.append(nn.Sequential(
             nn.Linear(h, output),
             nn.Dropout(p=dropout)
         ))
 
+        self.mlp = nn.Sequential(*fc_list)
+
     def forward(self, x):
-        for fc in self.fc_list:
-            x = fc(x)
+        x = self.mlp(x)
         return x

@@ -15,6 +15,7 @@ from config import config_parser
 from data.dataloader import DataLoader
 from data.dataset import Dataset
 from data.feature import Featurizer
+from methods.mlp_method import MlpMethod
 from radial_basis import KspaceRadialBasis
 from sklearn.linear_model import RidgeCV
 from sklearn.metrics import mean_squared_error
@@ -58,7 +59,7 @@ def split(X, y, idx_train, idx_test):
 
 
 def main(args):
-    frames_datasets = ase.io.read("xe3_dataset_dft.xyz", ":")
+    # frames_datasets = ase.io.read("xe3_dataset_dft.xyz", ":")
     # frames_datasets = ori_frames_datasets  # []
     # dimer_datasets = frames_datasets[:50]
     # trimer_datasets = frames_datasets[50:100]
@@ -124,10 +125,29 @@ def main(args):
     # energies_random_trimers_dimers -= diff_zero_point
     # print("")
     featurizer = Featurizer()
-    x2_50_data = Dataset("./xe2_50.xyz", 2, featurizer)
-    x3_50_data = Dataset("./xe3_50.xyz", 3, featurizer)
-    x3_data = Dataset("./xe3_dataset_dft.xyz", 3, featurizer)
-    dataloader = DataLoader([x2_50_data, x3_50_data, x3_data])
+    dimer_dataset = Dataset.from_file('xe2_50.xyz', 2, featurizer)
+    trimer_dataset = Dataset.from_file('xe3_50.xyz', 3, featurizer)
+    rand_trimer_dataset = Dataset.from_file('xe3_dataset_dft.xyz', 3, featurizer)
+
+    dimer_train, dimer_val = dimer_dataset.split(
+        [list(range(40)),
+         list(range(40, 50))])
+    trimer_train, trimer_val = trimer_dataset.split(
+        [list(range(40)),
+         list(range(40, 50))])
+    rand_trimer_train, rand_trimer_val = rand_trimer_dataset.split(
+        [[],
+         list(range(len(rand_trimer_dataset)))])
+
+    train = DataLoader([dimer_train, trimer_train, rand_trimer_train])
+    val = DataLoader([dimer_val, trimer_val, rand_trimer_val])
+
+    method = MlpMethod(train)
+
+    method.train()
+
+    dimer_energy = method.predict(dimer_dataset.X) * 2
+    trimer_energy = method.predict(trimer_dataset.X) * 3
 
     # idx_train = np.array(train_frames_dataset)[np.newaxis, :].T
     # idx_test = np.array(test_frames_dataset)[np.newaxis, :].T
@@ -149,16 +169,16 @@ def main(args):
     # y_train[y_train < -600000] /= 3
 
     # if we baseline the energies we should not have to fit the intercept
-    clf = RidgeCV(alphas=np.geomspace(1e-12, 1e2, 32), fit_intercept=True)
-    clf.fit(dataloader.X, dataloader.y)
+    # clf = RidgeCV(alphas=np.geomspace(1e-12, 1e2, 32), fit_intercept=True)
+    # clf.fit(dataloader.X, dataloader.y)
     # clf.fit(X_train, y_train)
     # clf.fit(X_train[0].values, y_diff_train)
-    print(clf.alpha_)
-
-    y_diff_pred = clf.predict(dataloader.X)
-    y_pred = np.copy(y_diff_pred)
-    y_pred[:50] *= 2
-    y_pred[50:] *= 3
+    # print(clf.alpha_)
+    #
+    # y_diff_pred = clf.predict(dataloader.X)
+    # y_pred = np.copy(y_diff_pred)
+    # y_pred[:50] *= 2
+    # y_pred[50:] *= 3
     # y_pred = y_diff_pred.copy() + yp_base
 
     # y_pred_dimers = y_pred[:50]
