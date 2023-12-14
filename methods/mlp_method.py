@@ -48,17 +48,18 @@ class MLP(nn.Module):
             if i == 0:
                 fc_list.append(nn.Sequential(
                     nn.Linear(input, h),
-                    nn.Dropout(p=dropout)
+                    nn.Dropout(p=dropout),
+                    nn.Sigmoid(),
                 ))
             else:
                 fc_list.append(nn.Sequential(
                     nn.Linear(hidden[i - 1], h),
-                    nn.Dropout(p=dropout)
+                    nn.Dropout(p=dropout),
+                    nn.Sigmoid(),
                 ))
 
         fc_list.append(nn.Sequential(
-            nn.Linear(h, output),
-            nn.Dropout(p=dropout)
+            nn.Linear(h, output)
         ))
 
         self.mlp = nn.Sequential(*fc_list)
