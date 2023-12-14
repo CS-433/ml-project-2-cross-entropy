@@ -12,10 +12,12 @@ class Dataset:
         raw_data (list): The raw data
         X (np.ndarray): The featurized data
         y (np.ndarray): The energy data
+        zero_point (float): The zero point energy
     """
     raw_data: list
     X: np.ndarray
     y: np.ndarray
+    energy_base: float = 0
 
     def __post_init__(self):
         # sanity check
@@ -33,7 +35,7 @@ class Dataset:
         return None
 
     @classmethod
-    def from_file(cls, path, num, featurizer: Featurizer):
+    def from_file(cls, path, num, featurizer: Featurizer, substract_enegry_base=False):
         """Load data from a file.
         Args:
             path (str): The path to the file.
@@ -43,8 +45,13 @@ class Dataset:
         raw_data = ase.io.read(path, ":")
         X = featurizer.featurize(raw_data)[0].values / num
         y = ase_to_tensormap(raw_data, energy="energy")[0].values / num
+        if substract_enegry_base:
+            energy_base = y[-1]
+            y = y - y[-1]
+        else:
+            energy_base = 0
 
-        return cls(raw_data, X, y)
+        return cls(raw_data, X, y, energy_base)
 
     def split(self, indexs: list):
         """Split the dataset.
