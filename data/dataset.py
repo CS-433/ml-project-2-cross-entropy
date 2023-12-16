@@ -1,6 +1,8 @@
+import os
 from dataclasses import dataclass
 from typing import Union
 import ase.io
+import metatensor
 import numpy as np
 from equisolve.utils import ase_to_tensormap
 from data.feature import Featurizer
@@ -35,7 +37,7 @@ class Dataset:
         return None
 
     @classmethod
-    def from_file(cls, path, num, featurizer: Featurizer, substract_enegry_base=False):
+    def from_file(cls, path, num, featurizer: Featurizer, enegry_base=0):
         """Load data from a file.
         Args:
             path (str): The path to the file.
@@ -43,15 +45,22 @@ class Dataset:
             featurizer (Featurizer): The featurizer.
         """
         raw_data = ase.io.read(path, ":")
-        X = featurizer.featurize(raw_data)[0].values / num
-        y = ase_to_tensormap(raw_data, energy="energy")[0].values / num
-        if substract_enegry_base:
-            energy_base = y[-1]
-            y = y - y[-1]
+        X_tensor = path.replace(".xyz", "_x.npz")
+        y_tensor = path.replace(".xyz", "_y.npz")
+        if os.path.exists(X_tensor) and os.path.exists(y_tensor):
+            X = metatensor.load(X_tensor)
+            y = metatensor.load(y_tensor)
         else:
-            energy_base = 0
+            X = featurizer.featurize(raw_data)
+            y = ase_to_tensormap(raw_data, energy="energy")
+            metatensor.save(X_tensor, X)
+            metatensor.save(y_tensor, y)
 
-        return cls(raw_data, X, y, energy_base)
+        X = X[0].values / num
+        y = y[0].values / num
+        y -= enegry_base
+
+        return cls(raw_data, X, y, enegry_base)
 
     def split(self, indexs: list):
         """Split the dataset.
