@@ -7,15 +7,17 @@ from config import config_parser
 from data.dataloader import DataLoader
 from data.dataset import Dataset
 from data.feature import Featurizer
+from methods.elasticnet_method import ElasticNetMethod
 from methods.mlp_method import MlpMethod
+from methods.lasso_method import LassoMethod
 from visualize import visualize_energy
 
 
 def main(args):
     featurizer = Featurizer()
-    dimer_dataset = Dataset.from_file('xe2_50.xyz', 2, featurizer)
-    trimer_dataset = Dataset.from_file('xe3_50.xyz', 3, featurizer)
-    rand_trimer_dataset = Dataset.from_file('xe3_dataset_dft.xyz', 3, featurizer)
+    dimer_dataset = Dataset.from_file('./dataset/xe2_50.xyz', 2, featurizer)
+    trimer_dataset = Dataset.from_file('./dataset/xe3_50.xyz', 3, featurizer)
+    rand_trimer_dataset = Dataset.from_file('./dataset/xe3_dataset_dft.xyz', 3, featurizer)
 
     dimer_train, dimer_val = dimer_dataset.split(
         [list(range(40)),
@@ -30,7 +32,7 @@ def main(args):
     train = DataLoader([dimer_train, trimer_train, rand_trimer_train])
     val = DataLoader([dimer_val, trimer_val, rand_trimer_val])
 
-    method = MlpMethod(train, epochs=300)
+    method = ElasticNetMethod(train)
 
     method.train()
 
