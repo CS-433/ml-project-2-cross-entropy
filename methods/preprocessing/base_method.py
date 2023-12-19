@@ -1,5 +1,6 @@
 import abc
 
+
 class PreprocessingMethod(abc.ABC):
     @abc.abstractmethod
     def fit(self, x, y=None):

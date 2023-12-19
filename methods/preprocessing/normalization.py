@@ -1,6 +1,8 @@
 import numpy as np
 from sklearn.preprocessing import Normalizer
+
 from .base_method import PreprocessingMethod
+
 
 class NormalizationMethod(PreprocessingMethod):
     def __init__(self):

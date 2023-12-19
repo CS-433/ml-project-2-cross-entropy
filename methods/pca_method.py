@@ -1,6 +1,7 @@
 from sklearn.decomposition import PCA
-from methods.base_method import BaseMethod
 from sklearn.preprocessing import StandardScaler
+
+from methods.base_method import BaseMethod
 
 
 class PCAAnalysis(BaseMethod):
@@ -16,7 +17,7 @@ class PCAAnalysis(BaseMethod):
         self.standardize = standardize
         self.model = PCA(n_components=self.n_components)
         self.scaler = StandardScaler() if standardize else None
-        
+
     def _standardize_data(self, X):
         if self.standardize:
             return self.scaler.fit_transform(X)
@@ -42,7 +43,7 @@ class PCAAnalysis(BaseMethod):
                 "PCA model must be trained before getting explained variance ratio."
             )
 
-    def find_components_number(self, ratio=1-10e-6):
+    def find_components_number(self, ratio=1 - 10e-6):
         if not hasattr(self.model, "explained_variance_ratio_"):
             raise RuntimeError(
                 "PCA model must be trained before searching for the number of components."

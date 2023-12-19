@@ -1,11 +1,13 @@
 import numpy as np
 from sklearn.linear_model import RidgeCV
+
 from .base_method import PreprocessingMethod
+
 
 class BaselingMethod(PreprocessingMethod):
     def __init__(self,
                  alphas: np.ndarray = np.geomspace(1e-18, 1e2, 14),
-                 fit_intercept: bool=False):
+                 fit_intercept: bool = False):
         self.alphas = alphas
         self.fit_intercept = fit_intercept
         self.clf = RidgeCV(alphas=alphas, fit_intercept=fit_intercept)
