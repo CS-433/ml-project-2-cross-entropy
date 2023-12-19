@@ -117,5 +117,7 @@ def visualize_energy(
 
     if fname is not None:
         fig.savefig(fname, bbox_inches="tight", transparent=False)
+
+    return fig, ax
         
     plt.show()
