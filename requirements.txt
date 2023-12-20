@@ -1,0 +1,9 @@
+scikit-learn
+numpy
+torch
+scipy
+matplotlib
+ase
+git+https://github.com/lab-cosmo/metatensor/tree/f7e2841dd2d69be7211d09e15df25a4d12d4bec5
+git+https://github.com/lab-cosmo/equisolve/tree/c858bedef4b2799eb445e4c92535ee387224089a
+git+https://github.com/Luthaf/rascaline/tree/e0cb3d5b4a2c06a2887775abb14109467fa2d474
