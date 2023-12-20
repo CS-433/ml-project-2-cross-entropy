@@ -22,19 +22,26 @@ class RidgeMethod(BaseMethod):
         predict: Implements the prediction process using the trained Ridge Regression model.
     """
 
-    def __init__(self, dataloader: DataLoader) -> None:
+    def __init__(self, dataloader: DataLoader, 
+                 alphas: np.ndarray=np.geomspace(1e-12, 1e2, 32),
+                 fit_intercept: bool=True) -> None:
         """
         Initializes the RidgeMethod instance.
 
         Args:
             dataloader (DataLoader): A data loader object which is expected to
                                      provide the necessary data for the method.
+            alphas (np.ndarray, optional): An array of alpha values to be used
+                                           in the RidgeCV model. Defaults to
+                                           a geometric sequence of alpha
+                                           values ranging from 1e-12 to 1e2.
+            fit_intercept (bool, optional): Whether to fit an intercept term.
 
         This method initializes the base class and sets up the RidgeCV model with a geometric
         sequence of alpha values ranging from 1e-12 to 1e2, and with fit_intercept set to True.
         """
         super().__init__(dataloader)
-        self.clf = RidgeCV(alphas=np.geomspace(1e-12, 1e2, 32), fit_intercept=True)
+        self.clf = RidgeCV(alphas=alphas, fit_intercept=fit_intercept)
 
     def train(self) -> None:
         """

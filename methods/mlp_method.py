@@ -40,7 +40,7 @@ class MlpMethod(BaseMethod):
     def predict(self, x):
         self.mlp.eval()
         x = torch.from_numpy(x.astype(np.float32))
-        return self.mlp(x)
+        return self.mlp(x).numpy()
 
 
 class MLP(nn.Module):
