@@ -12,14 +12,14 @@
 ## Quickstart
 
 ### Requirements
-Python 3.10
-
 ```shell
+git clone git@github.com:CS-433/ml-project-2-cross-entropy.git
+cd ml-project-2-cross-entropy
 pip install -r requirements.txt
 ```
 
 ### Datasets
-
+You can access the dataset [here](https://github.com/CS-433/ml-project-2-cross-entropy/tree/main/data)
 
 ### Run
 
