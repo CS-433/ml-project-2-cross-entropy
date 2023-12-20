@@ -1,5 +1,7 @@
 from sklearn.decomposition import PCA
+
 from .base_method import PreprocessingMethod
+
 
 class PCAMethod(PreprocessingMethod):
     def __init__(self, n_components=8):

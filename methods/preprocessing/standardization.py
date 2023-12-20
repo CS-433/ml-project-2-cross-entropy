@@ -1,5 +1,7 @@
 from sklearn.preprocessing import StandardScaler
+
 from .base_method import PreprocessingMethod
+
 
 class StandardizationMethod(PreprocessingMethod):
 

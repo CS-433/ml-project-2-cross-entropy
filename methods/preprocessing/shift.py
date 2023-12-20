@@ -1,8 +1,8 @@
 from .base_method import PreprocessingMethod
 
+
 class ShiftingMethod(PreprocessingMethod):
     def __init__(self, shift: float):
-
         self.shift = shift
 
     def fit(self, x, y=None):
