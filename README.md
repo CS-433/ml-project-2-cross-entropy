@@ -9,6 +9,10 @@
 - Qianjun Xu, qianjun.xu@epfl.ch
 - Siyuan Cheng, siyuan.cheng@epfl.ch
 
+
+## Method
+![method](./fig/method.png)
+
 ## Quickstart
 
 ### Requirements
@@ -19,9 +23,16 @@ pip install -r requirements.txt
 ```
 
 ### Datasets
-You can access the dataset [here](https://github.com/CS-433/ml-project-2-cross-entropy/tree/main/data)
+You can access the dataset [here](https://github.com/CS-433/ml-project-2-cross-entropy/tree/main/dataset). Download all `.xyz` and `.npz` files and put them into `./dataset` folder. 
+
+Because the dataset is small, we include all the datasets in the repository.
 
 ### Run
+```shell
+python train.py
+```
+### Results
+![results](./fig/results.png)
 
 
 ## Project Organization
