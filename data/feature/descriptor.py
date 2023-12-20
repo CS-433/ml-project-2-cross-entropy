@@ -1,10 +1,14 @@
+import os
 import metatensor
 import numpy as np
+from equisolve.utils import ase_to_tensormap
 from rascaline import AtomicComposition, LodeSphericalExpansion
 from rascaline.utils import PowerSpectrum
 from radial_basis import KspaceRadialBasis
 
-class Featurizer:
+from .feature_base import FeatureBase
+
+class DescriptorFeaturizer(FeatureBase):
 
     def __init__(self,
                  max_radial: int = 6,
@@ -23,8 +27,17 @@ class Featurizer:
         self._rs_calculator, self._co_calculator, self._ps_calculator = \
             self._config_calculator()
 
-    def featurize(self, raw_data: AtomicComposition):
+    def featurize(self, raw_data: AtomicComposition, file_name: str = None):
 
+        X_tensor = file_name.replace(".xyz", "_x.npz")
+        y_tensor = file_name.replace(".xyz", "_y.npz")
+
+        if os.path.exists(X_tensor) and os.path.exists(y_tensor):
+            X = metatensor.load(X_tensor)
+            y = metatensor.load(y_tensor)
+
+            return X[0].values, y[0].values
+        
         descriptor_rs = self._rs_calculator.compute(raw_data)
         descriptor_rs = descriptor_rs.components_to_properties(["spherical_harmonics_m"])
         descriptor_rs = descriptor_rs.keys_to_properties(
@@ -48,8 +61,12 @@ class Featurizer:
             X = metatensor.join([descriptor_rs, descriptor_ps], axis="properties")
         else:
             X = metatensor.join([descriptor_rs], axis="properties")
+        y = ase_to_tensormap(raw_data, energy="energy")
 
-        return X
+        metatensor.save(X_tensor, X)
+        metatensor.save(y_tensor, y)
+
+        return X[0].values, y[0].values
 
     def _config_calculator(self):
         lr_hypers_rs = {
