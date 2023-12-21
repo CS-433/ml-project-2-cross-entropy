@@ -22,7 +22,7 @@ class RidgeMethod(BaseMethod):
         predict: Implements the prediction process using the trained Ridge Regression model.
     """
 
-    def __init__(self, dataloader: DataLoader, 
+    def __init__(self, dataloader: DataLoader,
                  alphas: np.ndarray=np.geomspace(1e-12, 1e2, 32),
                  fit_intercept: bool=True) -> None:
         """

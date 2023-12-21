@@ -26,7 +26,7 @@ def visualize_energy(
         raise ValueError("Trimer data must be provided when show_trimer is True")
 
     n_ax = 2 if show_trimer else 1
-    fig, ax = plt.subplots(n_ax, sharex=True, dpi=200)
+    fig, ax = plt.subplots(n_ax, sharex=True, dpi=200, figsize=(4, 6))
 
     if not show_trimer:
         ax = [ax]

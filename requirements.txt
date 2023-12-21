@@ -1,6 +1,8 @@
 scikit-learn
 numpy
+pandas
 torch
 scipy
 matplotlib
 ase
+configargparse
