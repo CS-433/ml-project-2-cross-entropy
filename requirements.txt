@@ -4,6 +4,3 @@ torch
 scipy
 matplotlib
 ase
-git+https://github.com/lab-cosmo/metatensor
-git+https://github.com/lab-cosmo/equisolve
-git+https://github.com/Luthaf/rascaline
