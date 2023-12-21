@@ -44,7 +44,69 @@ python run.py
 
 
 ## Project Organization
+```shell
+.
+├── README.md
+├── config.py
+├── configs
+│   └── ridge.txt
+├── data
+│   ├── __init__.py
+│   ├── dataloader.py
+│   ├── dataset.py
+│   └── feature
+│       ├── __init__.py
+│       ├── coordinate.py
+│       ├── descriptor.py
+│       └── feature_base.py
+├── dataset
+│   ├── xe2_50.xyz
+│   ├── xe2_50_x.npz
+│   ├── xe2_50_y.npz
+│   ├── xe3_50.xyz
+│   ├── xe3_50_x.npz
+│   ├── xe3_50_y.npz
+│   ├── xe3_dataset_dft.xyz
+│   ├── xe3_dataset_dft_x.npz
+│   └── xe3_dataset_dft_y.npz
+├── fig
+│   ├── method.png
+│   └── results.png
+├── methods
+│   ├── __init__.py
+│   ├── base_method.py
+│   ├── bayesian_method.py
+│   ├── coord_based_1.ipynb
+│   ├── coord_based_2.ipynb
+│   ├── decision_tree_method.py
+│   ├── elasticnet_method.py
+│   ├── knn_method.py
+│   ├── lasso_lars_method.py
+│   ├── lasso_method.py
+│   ├── mlp_method.py
+│   ├── pca_method.py
+│   ├── preprocessing
+│   │   ├── __init__.py
+│   │   ├── base_lining.py
+│   │   ├── base_method.py
+│   │   ├── identity.py
+│   │   ├── methods_list.py
+│   │   ├── normalization.py
+│   │   ├── pca.py
+│   │   ├── shift.py
+│   │   └── standardization.py
+│   ├── random_forest_method.py
+│   └── ridge_method.py
+├── radial_basis.py
+├── requirements.txt
+├── run.ipynb
+├── run.py
+└── utils
+    ├── __init__.py
+    ├── energy_util.py
+    └── visualize.py
 
+```
 
 ## Acknowledgements
 The authors thank Philip Robin Loche and Kevin Kazuki Huguenin-Dumittan for their guidance and useful discussions.
