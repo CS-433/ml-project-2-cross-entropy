@@ -1,10 +1,7 @@
-import os
 from dataclasses import dataclass
 from typing import Union
 import ase.io
-import metatensor
 import numpy as np
-from equisolve.utils import ase_to_tensormap
 from data.feature.feature_base import FeatureBase
 
 @dataclass
